@@ -18,10 +18,10 @@ public class PlayerController : MonoBehaviour
 
         controller.Move(movement);
 
-        
+
         float lookHorizontal = Input.GetAxis("Mouse X");
         float lookVertical = Input.GetAxis("Mouse Y");
-        
+
         transform.Rotate(Vector3.up, lookHorizontal * rotationSpeed);
         cameraTransform.Rotate(Vector3.right, lookVertical * rotationSpeed);
     }
