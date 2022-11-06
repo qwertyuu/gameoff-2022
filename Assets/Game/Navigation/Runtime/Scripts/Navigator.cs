@@ -7,7 +7,8 @@ namespace Game.Navigation
         [SerializeField] RailNode startingNode = null;
         [SerializeField] private float speed = 4;
 
-        [Header("Rotation")] [SerializeField] bool faceDirection = true;
+        [Header("Rotation")]
+        [SerializeField] bool faceDirection = true;
         [SerializeField] float rotationSpeed = 360;
 
         private Vector3 _direction;
@@ -20,6 +21,7 @@ namespace Game.Navigation
         {
             _target = startingNode;
             ProceedToNextNode();
+            FaceForward();
         }
 
         private void Update()
@@ -37,12 +39,22 @@ namespace Game.Navigation
                     _distance -= coveredDistance;
                     if (faceDirection)
                     {
-                        Vector3 forward = Vector3.RotateTowards(transform.forward, _direction,
-                            rotationSpeed * Time.deltaTime, 0);
-                        transform.rotation = Quaternion.LookRotation(forward);
+                        FaceDirection();
                     }
                 }
             }
+        }
+
+        private void FaceDirection()
+        {
+            Vector3 forward = Vector3.RotateTowards(transform.forward, _direction,
+                rotationSpeed * Time.deltaTime, 0);
+            transform.rotation = Quaternion.LookRotation(forward);
+        }
+
+        private void FaceForward()
+        {
+            transform.LookAt(_direction + transform.position);
         }
 
         private void ProceedToNextNode()
