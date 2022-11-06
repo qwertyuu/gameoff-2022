@@ -7,8 +7,9 @@ namespace Game.Navigation
         [SerializeField] private Transform self;
         [SerializeField] private RailNode mainRoute;
         [SerializeField] private RailNode alternateRoute;
-        [field: SerializeField, Min(0.1f)] public float SpeedMultiplier { get; private set; } = 1;
-
+        
+        public float SpeedMultiplier { get; private set; } = 1;
+        
         private bool _switched = false;
 
         public Vector3 Position => self.position;
@@ -21,9 +22,29 @@ namespace Game.Navigation
             self = transform;
         }
 
+        void Start()
+        {
+            CalculateSpeedModifier();
+        }
+
         public void SwitchRoute()
         {
             _switched = alternateRoute != null;
+            CalculateSpeedModifier();
+        }
+        
+        private void CalculateSpeedModifier()
+        {
+            if (Next == null) return;
+            
+            Vector3 vector = Next.Position - Position;
+            Vector3 topDown = vector;
+            topDown.y = 0;
+
+            float angle = Vector3.SignedAngle(topDown, vector, Quaternion.AngleAxis(90, Vector3.up) * vector);
+            float baseMultiplier = angle / 60;
+            if (baseMultiplier > 0) baseMultiplier *= 2;
+            SpeedMultiplier = 1 + baseMultiplier;
         }
 
         private void OnDrawGizmos()
@@ -38,7 +59,7 @@ namespace Game.Navigation
 
         private void DrawGizmos(float transparency)
         {
-            Gizmos.color = Color.green;
+            Gizmos.color = _switched ? Color.red : Color.green;
             Gizmos.DrawSphere(Position, 0.25f * (1 - transparency));
 
             Gizmos.color = Color.cyan - Color.black * transparency;
@@ -50,7 +71,7 @@ namespace Game.Navigation
             if (alternateRoute != null)
             {
                 Gizmos.color = Color.yellow - Color.black * transparency;
-                Gizmos.DrawLine(Position, mainRoute.Position);
+                Gizmos.DrawLine(Position, alternateRoute.Position);
             }
         }
     }
