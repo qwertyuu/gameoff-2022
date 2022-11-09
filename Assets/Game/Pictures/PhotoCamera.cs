@@ -37,6 +37,17 @@ namespace Game.Pictures
         {
             Picture picture = new Picture(photo);
 
+            // RAPH: This is a sample detection script. This is meant to be better
+            var planes = GeometryUtility.CalculateFrustumPlanes(_cameraLens);
+            var pictureInterests = Object.FindObjectsOfType<PictureInterest>();
+            foreach (var pictureInterest in pictureInterests)
+            {
+                if (GeometryUtility.TestPlanesAABB(planes, pictureInterest.pictureInterestCollider.bounds))
+                {
+                    Debug.Log(pictureInterest.name + " has been detected!");
+                }
+            }
+
             //TODO: Create a Picture, give it the texture, find on-screen CameraSubjects, make calculations (screen space ratio, other special stuff, etc)
 
             return picture;
