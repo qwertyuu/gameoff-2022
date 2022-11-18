@@ -43,7 +43,7 @@ namespace Game.Pictures
 
             foreach (var elementInPicture in elementsInPicture)
             {
-                Bounds bounds = elementInPicture.pictureInterestCollider.bounds;
+                Bounds bounds = elementInPicture.PictureInterestCollider.bounds;
 
                 Vector3 boundsCenterToScreen = _cameraLens.WorldToScreenPoint(bounds.center);
                 Vector2 boundsCenterToScreen2d = new Vector2(boundsCenterToScreen.x, boundsCenterToScreen.y);
@@ -89,7 +89,7 @@ namespace Game.Pictures
 
             foreach (var pictureInterest in pictureInterests)
             {
-                if (GeometryUtility.TestPlanesAABB(planes, pictureInterest.pictureInterestCollider.bounds))
+                if (GeometryUtility.TestPlanesAABB(planes, pictureInterest.PictureInterestCollider.bounds))
                 {
                     elementsInPicture.Add(pictureInterest);
                 }

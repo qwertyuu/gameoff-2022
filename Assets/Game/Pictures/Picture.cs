@@ -30,6 +30,12 @@ namespace Game.Pictures
         {
             Subjects.Add(subject);
         }
+
+        public float Score()
+        {
+            // TODO: Make a scoring algo from the MainSubject! Don't forget to do something about the PictureInterest's state!
+            return 0;
+        }
     }
 
     public class PictureSubject
