@@ -33,9 +33,37 @@ namespace Game.Pictures
 
         public float Score()
         {
-            // TODO: Make a scoring algo from the MainSubject! Don't forget to do something about the PictureInterest's state!
-            return 0;
+            if (MainSubject == null || MainSubject.Heading == Heading.Back)
+            {
+                return 0;
+            }
+            // Idea for score:
+            // every subject has a base score value
+            // having the subject centered (in a zone around the absolute center of the camera) and facing at a reasonable distance gives max amount of points
+            // so, TODO: Determine the zones in a picture (centered, off center, out of focus)
+            // Also determine what a "reasonable distance" means. experiment by also adding pictureinterest width and height in order to approximate object size in picture (width, height and distance from camera)
+            var scoreMultiplier = 1f;
+            var score = 100f / MainSubject.DistanceFromCamera + 100f / MainSubject.DistanceFromCenterOfPicture;
+
+            if (MainSubject.Heading == Heading.Profile)
+            {
+                scoreMultiplier /= 2f;
+            }
+
+            if (MainSubject.SubjectState == PictureInterestState.Enraged)
+            {
+                scoreMultiplier *= 2f;
+            }
+            return score * scoreMultiplier;
+
         }
+    }
+
+    public enum Heading
+    {
+        Facing,
+        Profile,
+        Back
     }
 
     public class PictureSubject
@@ -62,6 +90,35 @@ namespace Game.Pictures
         public float HeadingAngle { get; private set; }
 
         /*
+        HeadingAngle (0 to 180) between where the element is looking and where it should look for it to look straight at the camera
+        0 means the PictureInterest is looking straight at the camera, 180 means looking straight away (turned around)
+        */
+        [PublicAPI]
+        public Heading Heading
+        {
+            get
+            {
+                var absAngle = Mathf.Abs(HeadingAngle);
+                if (absAngle <= 15)
+                {
+                    return Heading.Facing;
+                }
+                if (absAngle <= 95)
+                {
+                    return Heading.Profile;
+                }
+                return Heading.Back;
+            }
+        }
+
+        /*
+        HeadingAngle (0 to 180) between where the element is looking and where it should look for it to look straight at the camera
+        0 means the PictureInterest is looking straight at the camera, 180 means looking straight away (turned around)
+        */
+        [PublicAPI]
+        public PictureInterestState SubjectState { get; private set; }
+
+        /*
         PictureInterest is the interest itself. note that it is not a copy in time of the picture, so the values contained in this class cannot be calculated again later
         */
         [PublicAPI]
@@ -73,11 +130,12 @@ namespace Game.Pictures
             DistanceFromCamera = distanceFromCamera;
             HeadingAngle = headingAngle;
             PictureInterest = pictureInterest;
+            SubjectState = pictureInterest.State;
         }
 
         public override string ToString()
         {
-            return string.Format("DCentre: {0} DCamera: {1} HAngle: {2} Nom: {3}", DistanceFromCenterOfPicture, DistanceFromCamera, HeadingAngle, PictureInterest.name);
+            return string.Format("DCentre: {0} DCamera: {1} HAngle: {2} Heading: {3} Etat: {4} Nom: {5}", DistanceFromCenterOfPicture, DistanceFromCamera, HeadingAngle, Heading, SubjectState, PictureInterest.name);
         }
     }
 }

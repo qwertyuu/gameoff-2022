@@ -31,11 +31,30 @@ namespace Game.Pictures
                     _pictures.Add(picture);
                 }
             }
+            // TODO: Remove this part of the code, only used for dev... very inefficient.
+            Picture tp = new Picture(new Texture2D(1, 1));
+            ComputePictureSubjects(tp);
+            if (tp.MainSubject != null)
+            {
+                Debug.LogFormat("MainSubject is {0}. Score: {1}", tp.MainSubject, tp.Score());
+            }
         }
 
         public Picture CreatePicture(Texture photo)
         {
             Picture picture = new Picture(photo);
+            ComputePictureSubjects(picture);
+            Debug.LogFormat("Photo contains {0} subjects", picture.Subjects.Count);
+            if (picture.MainSubject != null)
+            {
+                Debug.LogFormat("MainSubject is {0}", picture.MainSubject);
+            }
+
+            return picture;
+        }
+
+        private void ComputePictureSubjects(Picture picture)
+        {
             var planes = GeometryUtility.CalculateFrustumPlanes(_cameraLens);
             var pictureInterests = Object.FindObjectsOfType<PictureInterest>();
             var elementsInPicture = GetPictureInterests(planes, pictureInterests);
@@ -72,15 +91,6 @@ namespace Game.Pictures
                     picture.SetMainSubject(pSubject);
                 }
             }
-            Debug.LogFormat("Photo contains {0} subjects", picture.Subjects.Count);
-            if (picture.MainSubject != null)
-            {
-                Debug.LogFormat("MainSubject is {0}", picture.MainSubject);
-            }
-
-            //TODO: Create a Picture, give it the texture, find on-screen CameraSubjects, make calculations (screen space ratio, other special stuff, etc)
-
-            return picture;
         }
 
         private PictureInterest[] GetPictureInterests(Plane[] planes, PictureInterest[] pictureInterests)
