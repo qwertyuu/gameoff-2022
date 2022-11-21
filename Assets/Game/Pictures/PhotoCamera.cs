@@ -31,7 +31,7 @@ namespace Game.Pictures
                     _pictures.Add(picture);
                 }
             }
-            // TODO: Remove this part of the code, only used for dev... very inefficient.
+            // TODO: Remove this part of the code (ComputePictureSubjects), only used for dev... very inefficient.
             Picture tp = new Picture(new Texture2D(1, 1));
             ComputePictureSubjects(tp);
             if (tp.MainSubject != null)
@@ -47,7 +47,7 @@ namespace Game.Pictures
             Debug.LogFormat("Photo contains {0} subjects", picture.Subjects.Count);
             if (picture.MainSubject != null)
             {
-                Debug.LogFormat("MainSubject is {0}", picture.MainSubject);
+                Debug.LogFormat("MainSubject is {0}. Score: {1}", picture.MainSubject, picture.Score());
             }
 
             return picture;
@@ -63,6 +63,8 @@ namespace Game.Pictures
             foreach (var elementInPicture in elementsInPicture)
             {
                 Bounds bounds = elementInPicture.PictureInterestCollider.bounds;
+                Vector3 boundsSize = elementInPicture.PictureInterestCollider.size;
+                var boundsFrontArea = boundsSize.x * bounds.size.y;
 
                 Vector3 boundsCenterToScreen = _cameraLens.WorldToScreenPoint(bounds.center);
                 Vector2 boundsCenterToScreen2d = new Vector2(boundsCenterToScreen.x, boundsCenterToScreen.y);
@@ -79,7 +81,7 @@ namespace Game.Pictures
                 // angle (0 to 180) between where the element is looking and where it should look for it to look straight at the camera
                 var hAngle = Vector3.Angle(whereElementIsHeaded, elementToCamera);
 
-                var pSubject = new PictureSubject(dCenter, dCamera, hAngle, elementInPicture);
+                var pSubject = new PictureSubject(dCenter, dCamera, hAngle, boundsFrontArea, elementInPicture);
                 picture.AddSubject(pSubject);
 
                 // Main subject is lowest on all axis (dCenter and dCamera)

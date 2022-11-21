@@ -62,6 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pictureInterestCollider: {fileID: 2705283983196600679}
+  fullScore: 100
   State: 0
 --- !u!1 &3051509807437113441
 GameObject:

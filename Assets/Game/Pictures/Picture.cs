@@ -33,7 +33,7 @@ namespace Game.Pictures
 
         public float Score()
         {
-            if (MainSubject == null || MainSubject.Heading == Heading.Back)
+            if (MainSubject == null || MainSubject.Heading == Heading.Away || MainSubject.Centering == Centering.WayOff || MainSubject.SizeCategory == Sizing.TooBig || MainSubject.SizeCategory == Sizing.TooSmall)
             {
                 return 0;
             }
@@ -43,11 +43,22 @@ namespace Game.Pictures
             // so, TODO: Determine the zones in a picture (centered, off center, out of focus)
             // Also determine what a "reasonable distance" means. experiment by also adding pictureinterest width and height in order to approximate object size in picture (width, height and distance from camera)
             var scoreMultiplier = 1f;
-            var score = 100f / MainSubject.DistanceFromCamera + 100f / MainSubject.DistanceFromCenterOfPicture;
+            var score = MainSubject.PictureInterest.FullScore;
 
-            if (MainSubject.Heading == Heading.Profile)
+            if (MainSubject.Heading == Heading.Side)
             {
                 scoreMultiplier /= 2f;
+            }
+
+
+            switch (MainSubject.SizeCategory)
+            {
+                case Sizing.Big:
+                    scoreMultiplier /= 1.1f;
+                    break;
+                case Sizing.Small:
+                    scoreMultiplier /= 1.5f;
+                    break;
             }
 
             if (MainSubject.SubjectState == PictureInterestState.Enraged)
@@ -61,9 +72,25 @@ namespace Game.Pictures
 
     public enum Heading
     {
-        Facing,
-        Profile,
-        Back
+        Facing, // Looking at the camera
+        Side, // Seeing the side of the head
+        Away // Turned away from the camera
+    }
+
+    public enum Sizing
+    {
+        TooSmall,
+        Small,
+        Reasonable,
+        Big,
+        TooBig
+    }
+
+    public enum Centering
+    {
+        WayOff, // Subject is really not centered
+        Off, // Subject is not centered in image
+        Centered // Subject is right in the center
     }
 
     public class PictureSubject
@@ -74,24 +101,30 @@ namespace Game.Pictures
         otherwise it is the distance offset with the center
         */
         [PublicAPI]
-        public float DistanceFromCenterOfPicture { get; private set; }
+        public float DistanceFromCenterOfPicture { get; }
 
         /*
         DistanceFromCamera is the world distance between the camera and the PictureInterest
         */
         [PublicAPI]
-        public float DistanceFromCamera { get; private set; }
+        public float DistanceFromCamera { get; }
 
         /*
         HeadingAngle (0 to 180) between where the element is looking and where it should look for it to look straight at the camera
         0 means the PictureInterest is looking straight at the camera, 180 means looking straight away (turned around)
         */
         [PublicAPI]
-        public float HeadingAngle { get; private set; }
+        public float HeadingAngle { get; }
 
         /*
-        HeadingAngle (0 to 180) between where the element is looking and where it should look for it to look straight at the camera
-        0 means the PictureInterest is looking straight at the camera, 180 means looking straight away (turned around)
+        BoundsFrontArea is the area (width*height) of the front of the PictureInterest bounds. 
+        This is used to approximate the size of the object in the photo in combination with the distance to the camera
+        */
+        [PublicAPI]
+        public float BoundsFrontArea { get; }
+
+        /*
+        Heading tells us where the subject is looking relative to the picture.
         */
         [PublicAPI]
         public Heading Heading
@@ -105,9 +138,58 @@ namespace Game.Pictures
                 }
                 if (absAngle <= 95)
                 {
-                    return Heading.Profile;
+                    return Heading.Side;
                 }
-                return Heading.Back;
+                return Heading.Away;
+            }
+        }
+
+        /*
+        SizeCategory tells us if the subject is far and hard to see, at a reasonable size or too big.
+        */
+        [PublicAPI]
+        public Sizing SizeCategory
+        {
+            get
+            {
+                var sizeOnCanvas = BoundsFrontArea * (1f / DistanceFromCamera);
+                if (sizeOnCanvas < 1)
+                {
+                    return Sizing.TooSmall;
+                }
+                if (sizeOnCanvas < 2)
+                {
+                    return Sizing.Small;
+                }
+                if (sizeOnCanvas < 4)
+                {
+                    return Sizing.Reasonable;
+                }
+                if (sizeOnCanvas <= 5.8)
+                {
+                    return Sizing.Big;
+                }
+                return Sizing.TooBig;
+            }
+        }
+
+        /*
+        Centering tells us if the subject is well centered in the image
+        */
+        [PublicAPI]
+        public Centering Centering
+        {
+            get
+            {
+                if (DistanceFromCenterOfPicture < 25)
+                {
+                    return Centering.Centered;
+                }
+                if (DistanceFromCenterOfPicture >= 80)
+                {
+                    return Centering.WayOff;
+                }
+                return Centering.Off;
             }
         }
 
@@ -124,18 +206,19 @@ namespace Game.Pictures
         [PublicAPI]
         public PictureInterest PictureInterest { get; private set; }
 
-        public PictureSubject(float distanceFromCenterOfPicture, float distanceFromCamera, float headingAngle, PictureInterest pictureInterest)
+        public PictureSubject(float distanceFromCenterOfPicture, float distanceFromCamera, float headingAngle, float boundsFrontArea, PictureInterest pictureInterest)
         {
             DistanceFromCenterOfPicture = distanceFromCenterOfPicture;
             DistanceFromCamera = distanceFromCamera;
             HeadingAngle = headingAngle;
+            BoundsFrontArea = boundsFrontArea;
             PictureInterest = pictureInterest;
             SubjectState = pictureInterest.State;
         }
 
         public override string ToString()
         {
-            return string.Format("DCentre: {0} DCamera: {1} HAngle: {2} Heading: {3} Etat: {4} Nom: {5}", DistanceFromCenterOfPicture, DistanceFromCamera, HeadingAngle, Heading, SubjectState, PictureInterest.name);
+            return string.Format("Heading: {0}\tEtat: {1}\tGrosseur: {2}\tCentré: {3}\tNom: {4}", Heading, SubjectState, SizeCategory, Centering, PictureInterest.name);
         }
     }
 }
