@@ -1414,7 +1414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4210411009185948971, guid: 99a2a43e136f36849b9af306eee02022, type: 3}
       propertyPath: force
-      value: 50
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4210411009185948971, guid: 99a2a43e136f36849b9af306eee02022, type: 3}
       propertyPath: player
@@ -1855,7 +1855,7 @@ Transform:
   m_GameObject: {fileID: 1802357502}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 44.5, y: -5, z: 0.7}
-  m_LocalScale: {x: 16.402, y: 7, z: 15.279437}
+  m_LocalScale: {x: 30.778204, y: 7, z: 27.937265}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

@@ -41,7 +41,7 @@ public class ChainBehaviourScript : MonoBehaviour
 
         readyToThrow = false;
         rbody.isKinematic = false;
-        rbody.AddForce(player.forward * force, ForceMode.Impulse);
+        rbody.AddForce(player.forward * force + transform.up * force/2, ForceMode.Impulse);
 
 
         readyToThrow = true;
