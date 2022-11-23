@@ -24,7 +24,7 @@ public class DynamicScrollView : MonoBehaviour
     {
         photoCamera = GameObject.FindGameObjectsWithTag("PhotoCamera")[0].GetComponent<PhotoCamera>();
 
-        _pictures = new List<Picture>();
+        _pictures = photoCamera.Photos;
         // for (int i = 0; i<200; i++){
         //     var texture = new Texture2D(2, 2, TextureFormat.ARGB32, false);
 

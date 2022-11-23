@@ -133,7 +133,6 @@ GameObject:
   m_Component:
   - component: {fileID: 173265130}
   - component: {fileID: 173265129}
-  - component: {fileID: 173265128}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -141,14 +140,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &173265128
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 173265127}
-  m_Enabled: 1
 --- !u!20 &173265129
 Camera:
   m_ObjectHideFlags: 0
@@ -991,6 +982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollViewContent: {fileID: 1904982881}
   prefab: {fileID: 19181952761352447, guid: ea4fc3855aa6245dca160aaff377c11a, type: 3}
+  photoCamera: {fileID: 0}
 --- !u!114 &1904982883
 MonoBehaviour:
   m_ObjectHideFlags: 0

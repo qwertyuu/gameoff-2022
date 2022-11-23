@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game.Pictures
@@ -19,8 +20,15 @@ namespace Game.Pictures
             _pictures = new List<Picture>(_rollfilmData.FilmCount);
         }
 
+        public List<Picture> Photos { get { return _pictures; } }
+
         public void Update()
         {
+            // quick hack
+            if (Input.GetKeyDown("j")) {
+                SceneManager.LoadScene("PicturesGallery");
+            }
+            // end of quick hack
             if (Input.GetMouseButtonDown(0))
             {
                 Texture photo = _rollfilm.TakePicture();
@@ -36,7 +44,7 @@ namespace Game.Pictures
             ComputePictureSubjects(tp);
             if (tp.MainSubject != null)
             {
-                Debug.LogFormat("MainSubject is {0}. Score: {1}", tp.MainSubject, tp.Score());
+                //Debug.LogFormat("MainSubject is {0}. Score: {1}", tp.MainSubject, tp.Score());
             }
         }
 

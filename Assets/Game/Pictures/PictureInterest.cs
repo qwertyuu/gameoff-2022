@@ -1,10 +1,10 @@
 using UnityEngine;
 
-public enum PictureInterestState 
+public enum PictureInterestState
 {
-  Default,
-  Enraged,
-  Special
+    Default,
+    Enraged,
+    Special
 }
 
 public class PictureInterest : MonoBehaviour
