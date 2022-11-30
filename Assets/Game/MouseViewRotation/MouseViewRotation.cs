@@ -14,11 +14,6 @@ public class MouseViewRotation : MonoBehaviour
         RotateCharacterHorizontal(dt);
         RotateCameraVertical(dt);
     }
-
-    void Start()
-    {
-        Object.DontDestroyOnLoad(this);
-    }
     
     private void RotateCharacterHorizontal(float deltaTime)
     {

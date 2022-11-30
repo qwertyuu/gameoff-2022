@@ -12,15 +12,15 @@ namespace Game.Pictures
         [SerializeField] private RawImage _debugImage;
 
         private Rollfilm _rollfilm;
-        private List<Picture> _pictures;
+        [SerializeField] private PictureList _pictureList;
 
         private void Awake()
         {
             _rollfilm = new Rollfilm(_rollfilmData, _cameraLens);
-            _pictures = new List<Picture>(_rollfilmData.FilmCount);
+            _pictureList.Clear(_rollfilmData.FilmCount);
         }
 
-        public List<Picture> Photos { get { return _pictures; } }
+        public List<Picture> Photos { get { return _pictureList.pictures; } }
 
         public void Update()
         {
@@ -36,7 +36,7 @@ namespace Game.Pictures
                 if (photo != null)
                 {
                     Picture picture = CreatePicture(photo);
-                    _pictures.Add(picture);
+                    _pictureList.pictures.Add(picture);
                 }
             }
             // TODO: Remove this part of the code (ComputePictureSubjects), only used for dev... very inefficient.
@@ -121,7 +121,7 @@ namespace Game.Pictures
         {
             _rollfilm.Dispose();
             _rollfilm = new Rollfilm(_rollfilmData, _cameraLens);
-            _pictures.Clear();
+            _pictureList.pictures.Clear();
         }
 
         private void OnDestroy()
