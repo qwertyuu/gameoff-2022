@@ -121,7 +121,7 @@ namespace Game.Pictures
         {
             _rollfilm.Dispose();
             _rollfilm = new Rollfilm(_rollfilmData, _cameraLens);
-            _pictureList.pictures.Clear();
+            _pictureList.Clear(_rollfilmData.FilmCount);
         }
 
         private void OnDestroy()

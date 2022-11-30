@@ -67,8 +67,8 @@ namespace Game.Pictures
             if (_films == null) return;
             for (int i = _data.FilmCount - 1; i >= 0; i--)
             {
-                _films[i].Release();
-                Object.DestroyImmediate(_films[i]);
+                //_films[i].Release();
+                //Object.DestroyImmediate(_films[i]);
             }
         }
     }
