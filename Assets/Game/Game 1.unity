@@ -736,6 +736,7 @@ MonoBehaviour:
     FilmCount: 9999
   _cameraLens: {fileID: 329105268}
   _debugImage: {fileID: 2058832083}
+  _pictureList: {fileID: 11400000, guid: bad5645ec6523e040a544a28a8d20c37, type: 2}
 --- !u!20 &329105268
 Camera:
   m_ObjectHideFlags: 0
