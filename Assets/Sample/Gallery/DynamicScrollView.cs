@@ -12,38 +12,23 @@ public class DynamicScrollView : MonoBehaviour
     private GameObject prefab;
 
     [SerializeField]
-    private List<Picture> _pictures;
-    
+    private GameObject popup;
+
     [SerializeField]
-    private PhotoCamera photoCamera;
+    private Text text;
 
+    [SerializeField]
+    private PictureList _pictureList;
 
+    private float score = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-        photoCamera = GameObject.FindGameObjectsWithTag("PhotoCamera")[0].GetComponent<PhotoCamera>();
-
-        _pictures = photoCamera.Photos;
-        // for (int i = 0; i<200; i++){
-        //     var texture = new Texture2D(2, 2, TextureFormat.ARGB32, false);
-
-        //     // set the pixel values
-        //     texture.SetPixel(0, 0, Color.black);
-        //     texture.SetPixel(1, 0, Color.black);
-        //     texture.SetPixel(0, 1, Color.black);
-        //     texture.SetPixel(1, 1, Color.black);
-        
-        //     // Apply all SetPixel calls
-        //     texture.Apply();
-
-        //     _pictures.Add(new Picture(texture));
-        // }
-
-
-
-        foreach(Picture picture in _pictures){
+        foreach(Picture picture in _pictureList.pictures){
             GameObject newPicture = Instantiate(prefab, scrollViewContent);
+
+            score += picture.Score();
 
             if (newPicture.TryGetComponent<ScrollViewItem>(out ScrollViewItem item)){
                 item.ChangeImage(picture.Texture);
@@ -56,5 +41,10 @@ public class DynamicScrollView : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void CalculateScore(){
+        text.text = "Congratulations ! \n You did " + score.ToString() + " points";
+        popup.SetActive(true);
     }
 }
