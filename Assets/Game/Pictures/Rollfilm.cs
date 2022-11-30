@@ -64,12 +64,9 @@ namespace Game.Pictures
         public void Dispose()
         {
             _cameraLens.targetTexture = null;
-            if (_films == null) return;
-            for (int i = _data.FilmCount - 1; i >= 0; i--)
-            {
-                //_films[i].Release();
-                //Object.DestroyImmediate(_films[i]);
-            }
+            // You might think it's a good idea to dispose of the textures here
+            // but they are used later on by other parts of the code when this rollfilm does not exist anymore,
+            // so please don't delete them!
         }
     }
 }
